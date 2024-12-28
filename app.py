@@ -5,8 +5,6 @@ import jieba
 from collections import Counter
 from pyecharts.charts import WordCloud, Bar, Line, Pie, Scatter, Radar, Map
 from pyecharts import options as opts
-from pyecharts.render import make_snapshot
-from snapshot_selenium import snapshot
 
 # Streamlit界面设置
 st.title("URL 文章词频分析")
@@ -65,8 +63,7 @@ if st.button('抓取并分析'):
                 chart.add_yaxis("", [item[1] for item in items])
             elif chart_type == "雷达图":
                 chart = Radar()
-                schema = [{"name": item[0], "max": max(filtered_word_counts.values())} for item in
-                          filtered_word_counts.items()]
+                schema = [{"name": item[0], "max": max(filtered_word_counts.values())} for item in filtered_word_counts.items()]
                 chart.add_schema(schema)
                 chart.add("", [[value for value in filtered_word_counts.values()]])
             elif chart_type == "地图":
@@ -75,11 +72,8 @@ if st.button('抓取并分析'):
 
             return chart
 
-        # 创建并渲染选定类型的图表
+        # 创建选定类型的图表
         selected_chart = create_chart(chart_type)
 
-        def render_chart(chart):
-            make_snapshot(snapshot, chart.render(), "chart.png")
-            return chart.render_embed()
-
-        st.components.v1.html(render_chart(selected_chart), width=800, height=600)
+        # 直接嵌入图表HTML
+        st.components.v1.html(selected_chart.render_embed(), width=800, height=600)
